@@ -1,5 +1,8 @@
 FROM centos:7
 
+ARG DOCKER_COMPOSE_VERSION="1.25.0"
+ARG INSPEC_PKG="https://packages.chef.io/files/stable/inspec/4.18.39/el/7/inspec-4.18.39-1.el7.x86_64.rpm"
+
 RUN yum remove docker \
   docker-client \
   docker-client-latest \
@@ -15,10 +18,12 @@ RUN yum install -y yum-utils \
   yum-config-manager \
   --add-repo \
   https://download.docker.com/linux/centos/docker-ce.repo; \
-  yum install docker-ce docker-ce-cli containerd.io -y
-
-RUN curl -L "https://github.com/docker/compose/releases/download/1.25.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose; \
+  yum install docker-ce docker-ce-cli containerd.io -y; \
+  curl -L "https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose; \
   chmod +x /usr/local/bin/docker-compose; \
-  ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
+  ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose; \
+  yum install -y ${INSPEC_PKG}; \
+  yum clean all
 
 VOLUME [ "/var/run/docker.sock" ]
+
