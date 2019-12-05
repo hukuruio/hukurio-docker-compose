@@ -1,0 +1,7 @@
+name: docker
+title: Docker Profile
+maintainer: HukuruIO SRE
+copyright: hukuruio
+license: Apache-2.0
+summary: docker  profile
+version: 0.1.0
