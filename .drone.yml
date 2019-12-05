@@ -1,0 +1,36 @@
+---
+kind: pipeline
+name: default
+
+steps:
+  - name: build
+    image: hukuruio/docker-compose:latest
+    volumes:
+      - name: dockersock
+        path: /var/run/docker.sock
+    commands:
+      - make
+
+  - name: push-image
+    when:
+      branch:
+        include:
+          - develop
+    image: hukuruio/docker-compose:latest
+    volumes:
+      - name: dockersock
+        path: /var/run/docker.sock
+    environment:
+      DOCKER_USERNAME:
+        from_secret: docker_username
+      DOCKER_PASSWORD:
+        from_secret: docker_password
+    commands:
+      - docker tag docker-compose:local hukuruio/docker-compose:develop
+      - echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
+      - docker push hukuruio/docker-compose:latest
+
+volumes:
+  - name: dockersock
+    host:
+      path: /var/run/docker.sock

@@ -1,0 +1,12 @@
+version: "2.1"
+
+services:
+  docker-compose:
+    image: docker-compose:local
+    container_name: docker-compose
+    environment:
+      - TEST_WAIT_INTERVAL=120
+    entrypoint:
+      - /bin/sh
+      - /tmp/test.sh
+

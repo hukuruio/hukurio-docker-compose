@@ -10,9 +10,8 @@ RUN yum remove docker \
   docker-latest \
   docker-latest-logrotate \
   docker-logrotate \
-  docker-engine -y
-
-RUN yum install -y yum-utils \
+  docker-engine -y; \
+  yum install -y yum-utils \
   device-mapper-persistent-data \
   lvm2; \
   yum-config-manager \
@@ -23,7 +22,10 @@ RUN yum install -y yum-utils \
   chmod +x /usr/local/bin/docker-compose; \
   ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose; \
   yum install -y ${INSPEC_PKG}; \
+  yum install -y make; \
   yum clean all
+
+COPY scripts/test.sh /tmp/test.sh
 
 VOLUME [ "/var/run/docker.sock" ]
 
