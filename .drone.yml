@@ -35,17 +35,3 @@ volumes:
   - name: dockersock
     host:
       path: /var/run/docker.sock
-
----
-kind: secret
-name: docker_username
-get:
-  path: eng/docker
-  name: username
-
----
-kind: secret
-name: docker_password
-get:
-  path: eng/docker
-  name: password
