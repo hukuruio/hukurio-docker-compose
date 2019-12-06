@@ -16,6 +16,7 @@ steps:
       branch:
         include:
           - develop
+          - feature/secrets
     image: hukuruio/docker-compose:latest
     volumes:
       - name: dockersock
