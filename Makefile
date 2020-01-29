@@ -1,18 +1,13 @@
+
 IMAGE=docker-compose:local
 
-default: dependencies build test
-.PHONY: dependencies build test
+default: build test
+.PHONY: build test
 
 build: 
 	docker build -t $(IMAGE) .
 
 test:
 	docker-compose up -d
-	inspec exec profiles/docker -t docker://docker-compose
+	inspec exec profiles/docker -t docker://docker-compose --chef-license=accept-silent
 	docker-compose down -v
-
-# release:
-# 	./scripts/release.sh $(IMAGE) $(TAG)
-
-# clean:
-# 	docker rmi -f $(IMAGE)
