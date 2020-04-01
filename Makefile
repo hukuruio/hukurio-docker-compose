@@ -1,5 +1,5 @@
 PREFIX=hukuruio
-IMAGE=docker-compose:local
+IMAGE=docker-compose
 
 default: build test
 .PHONY: build test
@@ -8,7 +8,7 @@ docker_login:
 	sh utils/docker_login.sh
 
 build: 
-	docker build -t $(IMAGE) .
+	docker build -t $(IMAGE):local .
 
 test:
 	docker-compose up -d
@@ -16,5 +16,5 @@ test:
 	docker-compose down -v
 
 release: docker_login
-	docker tag $(IMAGE) $(PREFIX)/$(IMAGE):latest
+	docker tag $(IMAGE):local $(PREFIX)/$(IMAGE):latest
 	docker push $(PREFIX)/$(IMAGE):latest
