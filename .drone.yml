@@ -21,10 +21,10 @@ steps:
       - name: dockersock
         path: /var/run/docker.sock
     environment:
+      DOCKER_HUB_TOKEN:
+        from_secret: docker_hub_token
       DOCKER_USERNAME:
         from_secret: docker_hub_username
-      DOCKER_PASSWORD:
-        from_secret: docker_hub_token
     commands:
       - make release
     when:
