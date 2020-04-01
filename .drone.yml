@@ -2,6 +2,10 @@
 kind: pipeline
 name: default
 
+environment:
+  GITHUB_ORG: hukuruio
+  GITHUB_REPO: hukurio-docker-compose
+
 steps:
   - name: build
     image: hukuruio/docker-compose:latest
@@ -12,10 +16,6 @@ steps:
       - make
 
   - name: push-image
-    when:
-      branch:
-        include:
-          - develop
     image: hukuruio/docker-compose:latest
     volumes:
       - name: dockersock
@@ -26,9 +26,40 @@ steps:
       DOCKER_PASSWORD:
         from_secret: docker_hub_token
     commands:
-      - docker tag docker-compose:local hukuruio/docker-compose:develop
-      - echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
-      - docker push hukuruio/docker-compose:latest
+      - make release
+    when:
+      status:
+        - success
+      branch:
+        include:
+          - develop
+      event:
+        include:
+        - push
+
+  - name: tag-git-repo
+    image: hukuruio/git:latest
+    environment:
+      GITHUB_USER:
+        from_secret: github_user
+      GITHUB_TOKEN:
+        from_secret: github_token
+    commands:
+      - python utils/manage.py create-release -b $${DRONE_COMMIT_BRANCH} -sha $${DRONE_COMMIT_SHA}
+    when:
+      status:
+        - success
+      branch:
+        include:
+          - develop
+      event:
+        include:
+        - push
+
+trigger:
+  event:
+    exclude:
+    - tag
 
 volumes:
   - name: dockersock
