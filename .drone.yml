@@ -22,9 +22,9 @@ steps:
         path: /var/run/docker.sock
     environment:
       DOCKER_USERNAME:
-        from_secret: docker_username
+        from_secret: docker_hub_username
       DOCKER_PASSWORD:
-        from_secret: docker_password
+        from_secret: docker_hub_token
     commands:
       - docker tag docker-compose:local hukuruio/docker-compose:develop
       - echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
